@@ -18,8 +18,8 @@ public class UserController {
         return ResponseEntity.ok(this.userService.registerUser(user));
     }
 
-    @GetMapping("/getUserByEmail")
-    public ResponseEntity<User> getUserByEmail(@RequestBody String email){
+    @GetMapping("/getUserByEmail/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email){
         return ResponseEntity.ok(this.userService.getUserByEmail(email));
     }
 

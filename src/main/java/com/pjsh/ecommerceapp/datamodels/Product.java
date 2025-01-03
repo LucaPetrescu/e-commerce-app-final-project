@@ -1,5 +1,6 @@
 package com.pjsh.ecommerceapp.datamodels;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Product extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name="category_id")
+    @JsonBackReference
     private Category category;
 
 }

@@ -1,8 +1,11 @@
 package com.pjsh.ecommerceapp.services;
 
+import com.pjsh.ecommerceapp.datamodels.Category;
 import com.pjsh.ecommerceapp.datamodels.Product;
-import com.pjsh.ecommerceapp.exceptions.ProductAlreadyExistsException;
+
+import com.pjsh.ecommerceapp.exceptions.CategoryDoesNotExistException;
 import com.pjsh.ecommerceapp.exceptions.ProductDoesNotExistException;
+import com.pjsh.ecommerceapp.repositories.CategoryRepository;
 import com.pjsh.ecommerceapp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,13 +23,27 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Value("${order.eligible.expression}")
     private String eligibilityExpression;
 
+
     public Product addProduct(Product product){
-        if(productRepository.findByName(product.getName()) != null){
-            throw new ProductAlreadyExistsException("This product already exists");
+        if (product.getCategory() == null || product.getCategory().getId() == null) {
+            throw new RuntimeException("Category must be specified for the product");
         }
+
+        Category category = categoryRepository.findById(product.getCategory().getId())
+                .orElseThrow(() -> new CategoryDoesNotExistException("No category with such id exists"));
+
+        product.setCategory(category);
+
+        category.getProducts().add(product);
+
+        categoryRepository.save(category);
+
         return productRepository.save(product);
     }
 
@@ -36,7 +53,7 @@ public class ProductService {
         if(foundProduct == null){
             throw new ProductDoesNotExistException("No product with such name exists");
         }
-        return productRepository.findByName(productName);
+        return foundProduct;
     }
 
     public Product getProductById(Integer id){

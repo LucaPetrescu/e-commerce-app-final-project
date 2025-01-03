@@ -4,9 +4,7 @@ import com.pjsh.ecommerceapp.datamodels.Order;
 import com.pjsh.ecommerceapp.datamodels.OrderItem;
 import com.pjsh.ecommerceapp.datamodels.Product;
 import com.pjsh.ecommerceapp.datamodels.User;
-import com.pjsh.ecommerceapp.exceptions.MinimalOrderPriceException;
-import com.pjsh.ecommerceapp.exceptions.OrderDoesNotExistException;
-import com.pjsh.ecommerceapp.exceptions.UserDoesNotExistException;
+import com.pjsh.ecommerceapp.exceptions.*;
 import com.pjsh.ecommerceapp.repositories.OrderRepository;
 import com.pjsh.ecommerceapp.repositories.ProductRepository;
 import com.pjsh.ecommerceapp.repositories.UserRepository;
@@ -44,7 +42,7 @@ public class OrderService {
     private String validationExpression;
 
     public Order placeOrder(Integer userId, List<Integer> productIds, List<Integer> quantities){
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserDoesNotExistException("No user with such id exists"));
 
         // Validate products and create order items
         List<OrderItem> orderItems = new ArrayList<>();
@@ -54,10 +52,10 @@ public class OrderService {
             Integer productId = productIds.get(i);
             Integer quantity = quantities.get(i);
 
-            Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+            Product product = productRepository.findById(productId).orElseThrow(() -> new ProductDoesNotExistException("No product with such id exists"));
 
             if (product.getAvailableQuantity() < quantity) {
-                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+                throw new OutOfStockException("Insufficient stock for product: " + product.getName());
             }
 
             product.setAvailableQuantity(product.getAvailableQuantity() - quantity);

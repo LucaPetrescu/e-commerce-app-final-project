@@ -1,8 +1,8 @@
-package com.pjsh.ecommerceapp.daos;
+package com.pjsh.ecommerceapp.dtos;
 
 import java.math.BigDecimal;
 
-public class ProductUpdateDAO {
+public class ProductUpdateDTO {
 
     private String name;
 

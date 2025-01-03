@@ -25,7 +25,7 @@ public class EventAspect {
     }
 
     @AfterReturning(pointcut = "execution(* com.pjsh.ecommerceapp.services.OrderService.placeOrder(..))", returning = "result")
-    public void publishOrderPlacedEvent(JoinPoint joinPoint, Object result) {
+    public OrderPlacedEvent publishOrderPlacedEvent(JoinPoint joinPoint, Object result) {
         Object[] args = joinPoint.getArgs();
         Integer userId = (Integer) args[0];
 
@@ -36,10 +36,12 @@ public class EventAspect {
 
         OrderPlacedEvent event = new OrderPlacedEvent(orderId, userId, totalAmount);
         eventPublisher.publishEvent(event);
+
+        return event;
     }
 
     @After("execution(* com.pjsh.ecommerceapp.services.ProductService.updateProduct(..))")
-    public void publishProductUpdatedEvent(JoinPoint joinPoint) {
+    public ProductUpdatedEvent publishProductUpdatedEvent(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         Integer productId = (Integer) args[0];
         String updatedFields = "Updated Fields: ";
@@ -53,6 +55,8 @@ public class EventAspect {
         eventPublisher.publishEvent(event);
 
         System.out.println("ProductUpdatedEvent published for Product ID: " + productId + " | " + updatedFields);
+
+        return event;
     }
 
 }

@@ -1,7 +1,6 @@
 package com.pjsh.ecommerceapp.controllers;
 
 import com.pjsh.ecommerceapp.datamodels.Category;
-import com.pjsh.ecommerceapp.datamodels.Product;
 import com.pjsh.ecommerceapp.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class CategoryController {
     }
 
     @GetMapping("/getCategoryById/{category_id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Integer categoryId){
+    public ResponseEntity<Category> getCategoryById(@PathVariable("category_id") Integer categoryId){
         return ResponseEntity.ok(this.categoryService.getCategoryById(categoryId));
     }
 
@@ -33,5 +32,4 @@ public class CategoryController {
     public ResponseEntity<String> deleteById(@PathVariable("category_id") Integer categoryId){
         return ResponseEntity.ok(this.categoryService.deleteById(categoryId));
     }
-
 }

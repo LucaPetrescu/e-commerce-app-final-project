@@ -1,6 +1,6 @@
 package com.pjsh.ecommerceapp.controllers;
 
-import com.pjsh.ecommerceapp.daos.ProductUpdateDAO;
+import com.pjsh.ecommerceapp.dtos.ProductUpdateDTO;
 import com.pjsh.ecommerceapp.datamodels.Product;
 import com.pjsh.ecommerceapp.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ public class ProductController {
     }
 
     @GetMapping("/getProductById/{product_id}")
-    public ResponseEntity<Product> gerProductById(@PathVariable Integer productId){
+    public ResponseEntity<Product> gerProductById(@PathVariable("product_id") Integer productId){
         return ResponseEntity.ok(this.productService.getProductById(productId));
     }
 
-    @GetMapping("/getProductByName")
-    public ResponseEntity<Product> getProductByName(@RequestBody String name){
+    @GetMapping("/getProductByName/{name}")
+    public ResponseEntity<Product> getProductByName(@PathVariable("name") String name){
         return ResponseEntity.ok(this.productService.getProductByName(name));
     }
 
@@ -42,7 +42,7 @@ public class ProductController {
     @PatchMapping("/updateProduct/{productId}")
     public ResponseEntity<Product> updateProduct(
             @PathVariable Integer productId,
-            @RequestBody ProductUpdateDAO updateRequest) {
+            @RequestBody ProductUpdateDTO updateRequest) {
 
         Product updatedProduct = productService.updateProduct(
                 productId,
